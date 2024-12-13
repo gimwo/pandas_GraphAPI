@@ -1,6 +1,2 @@
-message,from,from_psid,to,created_time,attachments
-Ilang months naho,Cyrus Saria,6975905909199745,Otica Kennel,2024-10-07T09:09:50+0000,{}
-Kuya complete vacation napo ba at papers nadin,Cyrus Saria,6975905909199745,Otica Kennel,2024-10-07T09:09:40+0000,{}
-kuya,Cyrus Saria,6975905909199745,Otica Kennel,2024-10-07T09:03:19+0000,{}
-French bulldog po.,Otica Kennel,336432822897939,Marites Mondonedo,2024-08-18T04:54:57+0000,{}
-Ano po breed ito?,Marites Mondonedo,8984646858288272,Otica Kennel,2024-08-18T01:50:04+0000,{}
+message,from,from_psid,to,created_time,attachment_id,attachment_mime_type,attachment_name,attachment_size,attachment_image_url,attachment_preview_url
+Ilang months naho,Cyrus Saria,6975905909199745,Otica Kennel,2024-10-07T09:09:50+0000,,,,,,

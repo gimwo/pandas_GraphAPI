@@ -7,25 +7,60 @@ load_dotenv()
 
 # The messages list to be converted to a dataframe and then to a csv
 messages_list = []
-"""
-message_data['message'], message_data['from']['name'], message_data['from']['id'],
-                                message_data['to']['data'][0]['name'], message_data['attachments']['data'] ,message_data['created_time']
-"""
 
 # function for creating a message item to be appended to list
 def create_message_dict(data):
+    if 'attachments' in data:
+        print("Attachments exist:", data['attachments'])
+    else:
+        print("No attachments found.")
+
     message_item = {
-        'message': data.get('message', ''),  # Safely get 'message', default to an empty string
-        'from': data.get('from', {}).get('name', ''),  # Safely get 'name' from 'from'
-        'from_psid': data.get('from', {}).get('id', ''),  # Safely get 'id' from 'from'
+        'message': data.get('message', ''),
+        'from': data.get('from', {}).get('name', ''),
+        'from_psid': data.get('from', {}).get('id', ''),
         'to': data.get('to', {}).get('data', [{}])[0].get('name', '') if data.get('to', {}).get('data') else '',
-        # Safely get 'to'
-        'created_time': data.get('created_time', ''),  # Safely get 'created_time'
-        'attachments': data.get('attachments', {}).get('data', {})  # Safely get 'attachments', default to an empty dictionary
+        'created_time': data.get('created_time', ''),
+        'attachments': data.get('attachments', {})
     }
     # print(message_item)
     messages_list.append(message_item)
 
+def prepare_dataframe(messages_list):
+    rows = []
+    for message in messages_list:
+        if message['attachments']:
+            for attachment in message['attachments']:
+                rows.append({
+                    'message': message['message'],
+                    'from': message['from'],
+                    'from_psid': message['from_psid'],
+                    'to': message['to'],
+                    'created_time': message['created_time'],
+                    'attachment_id': attachment.get('id', ''),
+                    'attachment_mime_type': attachment.get('mime_type', ''),
+                    'attachment_name': attachment.get('name', ''),
+                    'attachment_size': attachment.get('size', 0),
+                    'attachment_image_url': attachment.get('url', ''),
+                    'attachment_preview_url': attachment.get('preview_url', '')
+                })
+        else:
+            # Add a row for messages without attachments
+            rows.append({
+                'message': message['message'],
+                'from': message['from'],
+                'from_psid': message['from_psid'],
+                'to': message['to'],
+                'created_time': message['created_time'],
+                'attachment_id': '',
+                'attachment_mime_type': '',
+                'attachment_name': '',
+                'attachment_size': '',
+                'attachment_image_url': '',
+                'attachment_preview_url': ''
+            })
+
+        return rows
 
 # First we need to have access keys to the fb page
 # access keys provide the necessary permissions
@@ -57,10 +92,10 @@ for thread in conversations_data:
         for message in thread_data:
 
             message_id = message['id']
-            message_data_url= f"https://graph.facebook.com/v21.0/{message_id}?fields=message,from,to,created_time"
+            message_data_url= f"https://graph.facebook.com/v21.0/{message_id}?fields=message,from,to,created_time,attachments"
             message_response = requests.get(message_data_url, params=params)
 
-            print(message_response.json()['message'])
+            # print(message_response.json()['message'])
             message_data = message_response.json()
             create_message_dict(message_data)
 
@@ -75,7 +110,12 @@ for thread in conversations_data:
             is_next_page = False
 
 print(messages_list)
-df = pd.DataFrame(messages_list)
+
+"""
+TODO: Fix up logic for the attachment files
+"""
+df_rows = prepare_dataframe(messages_list)
+df = pd.DataFrame(df_rows)
 
 # data cleaning for messages with empty strings could be due to the message being only an attachment
 df_cleaned = df[df['message'].str.strip() != ""]
