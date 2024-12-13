@@ -9,7 +9,7 @@ load_dotenv()
 messages_list = []
 
 # function for creating a message item to be appended to list
-def create_message_object(message_text,received_from, received_to,created_time):
+def create_message_dict(message_text,received_from, received_to,created_time):
     message_item = {
         'message': message_text,
         'from': received_from,
@@ -54,7 +54,7 @@ for thread in conversations_data:
             message_response = requests.get(message_data_url, params=params)
 
             message_data = message_response.json()
-            create_message_object(message_data['message'], message_data['from']['name'], message_data['to']['data'][0]['name'], message_data['created_time'])
+            create_message_dict(message_data['message'], message_data['from']['name'], message_data['to']['data'][0]['name'], message_data['created_time'])
 
         # pagination next
         after_key = thread_response.json()['paging']['cursors']['after']
