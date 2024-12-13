@@ -7,14 +7,21 @@ load_dotenv()
 
 # The messages list to be converted to a dataframe and then to a csv
 messages_list = []
+"""
+message_data['message'], message_data['from']['name'], message_data['from']['id'],
+                                message_data['to']['data'][0]['name'], message_data['attachments']['data'] ,message_data['created_time']
+"""
 
 # function for creating a message item to be appended to list
-def create_message_dict(message_text,received_from, received_to,created_time):
+def create_message_dict(data):
     message_item = {
-        'message': message_text,
-        'from': received_from,
-        'to': received_to,
-        'created_time': created_time
+        'message': data.get('message', ''),  # Safely get 'message', default to an empty string
+        'from': data.get('from', {}).get('name', ''),  # Safely get 'name' from 'from'
+        'from_psid': data.get('from', {}).get('id', ''),  # Safely get 'id' from 'from'
+        'to': data.get('to', {}).get('data', [{}])[0].get('name', '') if data.get('to', {}).get('data') else '',
+        # Safely get 'to'
+        'created_time': data.get('created_time', ''),  # Safely get 'created_time'
+        'attachments': data.get('attachments', {}).get('data', {})  # Safely get 'attachments', default to an empty dictionary
     }
     # print(message_item)
     messages_list.append(message_item)
@@ -53,8 +60,9 @@ for thread in conversations_data:
             message_data_url= f"https://graph.facebook.com/v21.0/{message_id}?fields=message,from,to,created_time"
             message_response = requests.get(message_data_url, params=params)
 
+            print(message_response.json()['message'])
             message_data = message_response.json()
-            create_message_dict(message_data['message'], message_data['from']['name'], message_data['to']['data'][0]['name'], message_data['created_time'])
+            create_message_dict(message_data)
 
         # pagination next
         after_key = thread_response.json()['paging']['cursors']['after']
