@@ -106,7 +106,7 @@ for thread in conversations_data:
         print(thread_data_url)
 
         # to check if no more messages on the next page if empty exit while loop
-        if thread_data_url == "":
+        if thread_data_url == '':
             is_next_page = False
 
 # print(messages_list)

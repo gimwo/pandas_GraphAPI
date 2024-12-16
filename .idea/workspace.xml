@@ -8,7 +8,7 @@
       <change afterPath="$PROJECT_DIR$/.env-oth" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages.csv" beforeDir="false" afterPath="$PROJECT_DIR$/messages.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pandas_prac.py" beforeDir="false" afterPath="$PROJECT_DIR$/pandas_prac.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
